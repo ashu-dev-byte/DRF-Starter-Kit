@@ -1,0 +1,16 @@
+{
+    "cSpell.words": ["corsheaders", "simplejwt", "Skool"],
+    "python.defaultInterpreterPath": "../.venv/bin/python",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnType": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.unusedImports": "explicit"
+        }
+    },
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true
+    }
+}

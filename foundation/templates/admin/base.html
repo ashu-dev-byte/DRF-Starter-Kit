@@ -1,0 +1,15 @@
+{% extends 'admin/base.html' %}
+
+{% load custom_tags %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+    :root {
+        --primary: {% primary_color %};
+        --secondary: {% secondary_color %};
+    }
+</style>
+{% endblock %}
+
+
+

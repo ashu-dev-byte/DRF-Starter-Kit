@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+    web:
+        build: .
+        container_name: drf_starter_kit_web
+        ports:
+            - '15000:15000'
+        volumes:
+            - .:/app
+        depends_on:
+            - db
+        command: gunicorn --bind 0.0.0.0:15000 drf_starter_kit.wsgi:application
+
+    db:
+        image: postgres:13
+        container_name: drf_starter_kit_db
+        ports:
+            - '5432:5432'
+        environment:
+            POSTGRES_DB: drf
+            POSTGRES_USER: drf_user
+            POSTGRES_PASSWORD: password
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+
+volumes:
+    postgres_data:

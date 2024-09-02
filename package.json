@@ -1,0 +1,14 @@
+{
+    "name": "drf_starter_kit",
+    "version": "0.0.1",
+    "license": "ISC",
+    "private": true,
+    "author": "Ashutosh Anand",
+    "scripts": {
+        "install:deps": "pip install -r requirements.txt",
+        "create:superuser": "python manage.py createsuperuser",
+        "makemigrations": "python manage.py makemigrations",
+        "migrate": "python manage.py migrate",
+        "server": "python manage.py runserver 15000"
+    }
+}
