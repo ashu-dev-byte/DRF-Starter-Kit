@@ -17,8 +17,25 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path, re_path
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 from foundation import views
+
+
+swagger_schema_view = get_schema_view(
+    openapi.Info(
+        title="DRF Starter Kit API",
+        default_version="v1",
+        description="DRF Starter Kit API documentation",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@yourproject.local"),
+        license=openapi.License(name="ISC License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 
 # Auth Routes
@@ -42,4 +59,7 @@ api_url_patterns = [
 urlpatterns = [
     path("admin/", admin.site.urls),
     re_path("api/", include(api_url_patterns)),
+    # Swagger URLs
+    path("swagger/", swagger_schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    path("redoc/", swagger_schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
