@@ -45,11 +45,11 @@ SECRET_KEY = env("SECRET_KEY")  # SECURITY WARNING: keep the secret key used in 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# TODO: Change it before going to prod
 ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
-
 INSTALLED_APPS = [
     # Standard Django apps
     "django.contrib.admin",
