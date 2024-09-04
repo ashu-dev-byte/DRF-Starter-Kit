@@ -10,6 +10,6 @@
         "create:superuser": "python manage.py createsuperuser",
         "makemigrations": "python manage.py makemigrations",
         "migrate": "python manage.py migrate",
-        "server": "python manage.py runserver 15000"
+        "server": "python manage.py runserver"
     }
 }

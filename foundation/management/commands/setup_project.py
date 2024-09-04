@@ -22,15 +22,17 @@ from django.contrib.auth import get_user_model as User
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
-import subprocess
 
+import platform
+import subprocess
+import sys
 
 WHITE, YELLOW, BLUE, GREEN, CYAN = "\033[37m", "\033[33m", "\033[94m", "\033[92m", "\033[96m"
 END = "\33[0m"
 
 
 def color_text(text, color=WHITE):
-    return f"{color} {text} {END}"
+    return f"\n{color}{text}{END}"
 
 
 class Command(BaseCommand):
@@ -39,18 +41,71 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS(color_text("Starting project setup:", CYAN)))
 
-        print(color_text("\nInstalling dependencies...", BLUE))
+        system_os = platform.system()
+        print(color_text(f"Detected {system_os}", BLUE))
+
+        # Check if PostgreSQL is installed
+        print(color_text("Checking PostgreSQL installation...", BLUE))
+        try:
+            result = subprocess.run(["which", "psql"], capture_output=True, text=True, check=True)
+            if not result.stdout.strip():
+                self.stdout.write(
+                    self.style.ERROR(
+                        "\nPostgreSQL is not installed. Please install PostgreSQL and try again.",
+                    )
+                )
+                sys.exit(1)
+
+            # Log PostgreSQL version
+            version_result = subprocess.run(
+                ["psql", "--version"], capture_output=True, text=True, check=True
+            )
+            version_info = version_result.stdout.strip()
+            print(color_text(f"PostgreSQL found: {version_info}", BLUE))
+        except subprocess.CalledProcessError:
+            self.stdout.write(
+                self.style.ERROR("\nNot found! Ensure PostgreSQL is installed and accessible.")
+            )
+            sys.exit(1)
+
+        # Set up PostgreSQL
+        print(color_text("Setting up PostgreSQL...", BLUE))
+        unix_psql = ["sudo", "-u", "postgres", "psql", "-c"]
+        windows_psql = ["psql", "-c"]
+        psql_cmd = windows_psql if system_os is "Windows" else unix_psql
+        commands = [
+            "CREATE DATABASE drf;",
+            "CREATE USER drf_user WITH PASSWORD 'password';",
+            "GRANT ALL PRIVILEGES ON DATABASE drf TO drf_user;",
+            "ALTER USER drf_user SUPERUSER;",
+        ]
+        FAILED = False
+
+        for sql_command in commands:
+            try:
+                print(color_text(f"{sql_command}", CYAN))
+                subprocess.check_call(psql_cmd + [sql_command])
+            except subprocess.CalledProcessError as e:
+                FAILED = True
+
+        if not FAILED:
+            print(color_text("PostgreSQL setup process completed!", BLUE))
+
+        # Install dependencies
+        print(color_text("Installing dependencies...", BLUE))
         subprocess.check_call(["pip", "install", "-r", "requirements.txt"])
 
-        print(color_text("\nMaking migrations...", BLUE))
+        # Run migrations
+        print(color_text("Making migrations...", BLUE))
         call_command("makemigrations")
 
-        print(color_text("\nApplying migrations...", BLUE))
+        print(color_text("Applying migrations...", BLUE))
         call_command("migrate")
 
+        # Create superuser
         server_env = settings.ENV
         if server_env in ["local", "test", "staging"]:
-            self.stdout.write(color_text("\nCreating default superuser...", BLUE))
+            self.stdout.write(color_text("Creating default superuser...", BLUE))
             email = "orgAdmin@afterSkool.com"
             name = "Organization Admin"
             password = "password"
