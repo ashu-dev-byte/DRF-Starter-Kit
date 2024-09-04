@@ -39,15 +39,25 @@ class Command(BaseCommand):
     help = "Setup the Django project with default configs"
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.SUCCESS(color_text("Starting project setup:", CYAN)))
+        self.stdout.write(
+            self.style.SUCCESS(color_text("Dependencies installed! Starting further process:", CYAN))
+        )
+
+        # Install dependencies
+        # print(color_text("Installing dependencies...", BLUE))
+        # subprocess.check_call(["pip", "install", "-r", "requirements.txt"])
 
         system_os = platform.system()
+        is_windows = system_os == "Windows"
         print(color_text(f"Detected {system_os}", BLUE))
 
         # Check if PostgreSQL is installed
         print(color_text("Checking PostgreSQL installation...", BLUE))
         try:
-            result = subprocess.run(["which", "psql"], capture_output=True, text=True, check=True)
+            unix_postgres = ["which", "psql"]
+            windows_postgres = ["where", "psql"]
+            find_postgres = windows_postgres if is_windows else unix_postgres
+            result = subprocess.run(find_postgres, capture_output=True, text=True, check=True)
             if not result.stdout.strip():
                 self.stdout.write(
                     self.style.ERROR(
@@ -72,7 +82,7 @@ class Command(BaseCommand):
         print(color_text("Setting up PostgreSQL...", BLUE))
         unix_psql = ["sudo", "-u", "postgres", "psql", "-c"]
         windows_psql = ["psql", "-c"]
-        psql_cmd = windows_psql if system_os is "Windows" else unix_psql
+        psql_cmd = windows_psql if is_windows else unix_psql
         commands = [
             "CREATE DATABASE drf;",
             "CREATE USER drf_user WITH PASSWORD 'password';",
@@ -90,10 +100,6 @@ class Command(BaseCommand):
 
         if not FAILED:
             print(color_text("PostgreSQL setup process completed!", BLUE))
-
-        # Install dependencies
-        print(color_text("Installing dependencies...", BLUE))
-        subprocess.check_call(["pip", "install", "-r", "requirements.txt"])
 
         # Run migrations
         print(color_text("Making migrations...", BLUE))
