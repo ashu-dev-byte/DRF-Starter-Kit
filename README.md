@@ -2,8 +2,7 @@
 
 ## Overview
 
-This guide provides instructions for setting up a Django project with PostgreSQL. The project includes essential features like virtual environment setup, dependency installation, PostgreSQL configuration, and VS Code setup.
-It also comes with built-in authentication, a structured file layout for admin, views, serializers, models, and URL structure, and pre-configured settings to streamline your development process.
+This guide provides instructions for setting up a Django project with PostgreSQL. The project includes essential features like virtual environment setup, dependency installation, PostgreSQL configuration, and VS Code setup. It also comes with built-in authentication, Swagger documentation support, a structured file layout for admin, views, serializers, models, and URL structure, and pre-configured settings to streamline your development process.
 
 ## Prerequisites
 
@@ -14,9 +13,7 @@ It also comes with built-in authentication, a structured file layout for admin, 
     -   **Python**: For Python development
     -   **Black Formatter**: For code formatting
 
-## Setup Instructions
-
-### 1. Create and Activate Virtual Environment
+## Create and Activate Virtual Environment
 
 1. **Create a virtual environment**:
 
@@ -40,9 +37,9 @@ It also comes with built-in authentication, a structured file layout for admin, 
         .venv\Scripts\activate
         ```
 
-    You should see `(venv)` at the beginning of your command line prompt indicating that the virtual environment is active.
+    You should see `(venv)` at the beginning of your command line prompt, indicating that the virtual environment is active.
 
-### 2. Clone the Repository
+## Clone the Repository
 
 Clone the project repository to your local machine:
 
@@ -51,17 +48,52 @@ git clone <repository-url>
 cd <repository-directory>
 ```
 
-Replace `<repository-url>` with the actual repository URL and `<repository-directory>` with the directory name where the repository is cloned.
+Make sure your virtual environment (`.venv`) is located within the cloned `<repository-directory>`. Replace `<repository-url>` with the actual repository URL and `<repository-directory>` with the directory name where the repository is cloned.
 
-### 3. Install Project Dependencies
+## Setup Options
 
-With the virtual environment activated, install the project dependencies:
+You have two options for setting up the project:
+
+### Option 1: Quick Setup with Default Configurations
+
+If you want to quickly set up the project using the default configurations, you can use the pre-configured management command. This will automatically install dependencies, set up the database, apply migrations, and create a superuser with default credentials.
+
+1. **Run the setup command**:
+
+    ```bash
+    npm run setup:project
+    ```
+
+    This command will:
+
+    - Install all required Python packages from `requirements.txt`.
+    - Set up the PostgreSQL database with default configurations.
+    - Apply database migrations.
+    - Create a superuser with the email `admin@example.com` and password `password`.
+
+    After running this command, the project will be ready to use with the default settings.
+
+### Option 2: Manual Setup (Customizable)
+
+If you prefer to configure the project as per your requirements, follow the detailed setup steps outlined below.
+
+## Additional Setup Instructions (Manual Setup Only)
+
+### 1. Install Project Dependencies
+
+With the virtual environment activated, install the project dependencies using:
+
+```bash
+npm run install:deps
+```
+
+Alternatively, you can use:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Set Up PostgreSQL
+### 2. Set Up PostgreSQL
 
 1. **Switch to the PostgreSQL user**:
 
@@ -86,7 +118,11 @@ pip install -r requirements.txt
 
     Replace `drf`, `drf_user`, and `password` with your desired database name, username, and password. Make the same changes in the `.env` file as well.
 
-### 5. Run Migrations and Start the Server
+### 3. Run Migrations and Start the Server
+
+**Option 1**: If you've already run the `npm run setup:project` command, you can skip this section, as the setup command has already handled these steps for you.
+
+**Option 2**: If you prefer to configure the project manually, follow the steps below:
 
 1. **Generate database migrations (Optional)**:
    Run this only when you have made changes to the models or added a migration manually.
@@ -127,12 +163,13 @@ pip install -r requirements.txt
 ## Project Features
 
 -   **Virtual Environment Setup**: Preconfigured virtual environment to manage dependencies.
--   **Dependency Installation**: Automatically install necessary packages via `requirements.txt`.
+-   **Dependency Installation**: Automatically install necessary packages via `npm run install:deps` or alternatively using `pip install -r requirements.txt`.
 -   **PostgreSQL Configuration**: Includes steps to set up PostgreSQL database and user.
 -   **VS Code Setup**: Instructions for configuring VS Code with essential extensions.
 -   **Authentication**: Built-in authentication with a custom user model extending `BaseUser` and `BaseUserManager`.
+-   **Swagger Documentation Support**: Integrated Swagger UI for API documentation and testing.
 -   **Structured File Layout**: Pre-organized files for admin, views, serializers, models, and URL structure.
--   **Preconfigured Settings**: Settings are already configured to simplify setup.
+-   **Pre-configured Settings**: Settings are already configured to simplify setup.
 -   **Middleware Logging**: Logs the number of queries executed and the total time taken for each request. Note: Does not support multi-database configurations.
 
 ## Additional Notes

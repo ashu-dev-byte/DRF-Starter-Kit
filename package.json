@@ -5,6 +5,7 @@
     "private": true,
     "author": "Ashutosh Anand",
     "scripts": {
+        "setup:project": "python manage.py setup_project",
         "install:deps": "pip install -r requirements.txt",
         "create:superuser": "python manage.py createsuperuser",
         "makemigrations": "python manage.py makemigrations",

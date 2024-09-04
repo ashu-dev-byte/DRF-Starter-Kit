@@ -32,8 +32,8 @@ env = environ.Env(
     DB_HOST=(str, "localhost"),
     DB_PORT=(str, "5432"),
 )
-
 environ.Env.read_env(env.str("ENV_PATH", DEFAULT_ENV_FILE))  # Reading .env file
+ENV_VARS = env
 
 
 ENV = env("SERVER_ENV")  # Environment we're running on, e.g. "local", "test", "prod"

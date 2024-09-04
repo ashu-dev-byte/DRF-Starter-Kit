@@ -13,7 +13,7 @@ class UserManager(BaseUserManager):
         "Create and save a User with the given email and password."
 
         if not email:
-            raise ValueError(_("The Email must be set"))
+            raise ValueError(_("The Email must be set!"))
 
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
