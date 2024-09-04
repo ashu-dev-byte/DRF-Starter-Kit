@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+
 import environ
 import os
 
@@ -20,7 +21,9 @@ root = environ.Path(__file__) - 2  # Set location 2 folders back (/a/b/ - 2 => /
 DEFAULT_ENV_PATH = root()  # Default location of .env file
 DEFAULT_ENV_FILE = os.path.join(DEFAULT_ENV_PATH, ".env")
 
+
 APP_LABEL = "DRF Starter Kit"
+
 
 env = environ.Env(
     SERVER_ENV=(str, "local"),
@@ -67,6 +70,7 @@ INSTALLED_APPS = [
     "drf_yasg",
 ]
 
+
 MIDDLEWARE = [
     # Default Django provided middlewares
     "django.middleware.security.SecurityMiddleware",
@@ -80,6 +84,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
+
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -89,12 +94,15 @@ REST_FRAMEWORK = {
     ),
 }
 
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
     # "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
 
+
 ROOT_URLCONF = "drf_starter_kit.urls"
+
 
 TEMPLATES = [
     {
@@ -112,12 +120,12 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = "drf_starter_kit.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -129,12 +137,12 @@ DATABASES = {
     }
 }
 
+
 AUTH_USER_MODEL = "foundation.User"
 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -153,27 +161,22 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = "static/"
-STATIC_ROOT = "/app/staticfiles"
+# STATIC_ROOT = "/app/staticfiles"
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True

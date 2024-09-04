@@ -91,7 +91,7 @@ This will automatically install dependencies, set up the database, apply migrati
     - Install all required Python packages from `requirements.txt`.
     - Set up the PostgreSQL database with default configurations.
     - Apply database migrations.
-    - Create a superuser with the email `orgAdmin@afterSkool.com` and password `password`.
+    - Create a superuser with the email `admin@drf.com` and password `password`.
 
     Note: This command will create a superuser only if the server environment is in `["local", "test", "staging"]`.
 

@@ -106,8 +106,8 @@ class Command(BaseCommand):
         server_env = settings.ENV
         if server_env in ["local", "test", "staging"]:
             self.stdout.write(color_text("Creating default superuser...", BLUE))
-            email = "orgAdmin@afterSkool.com"
-            name = "Organization Admin"
+            email = "admin@drf.com"
+            name = "System Overlord"
             password = "password"
             if not User().objects.filter(email=email).exists():
                 User().objects.create_superuser(email=email, password=password, name=name)
