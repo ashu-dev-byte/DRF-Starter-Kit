@@ -117,8 +117,8 @@ class Command(BaseCommand):
             password = "password"
             if not User().objects.filter(email=email).exists():
                 User().objects.create_superuser(email=email, password=password, name=name)
-                print(color_text("Superuser created successfully!", BLUE))
+                print(color_text(f"Superuser with creds '{email}' and '{password}' created!", BLUE))
             else:
-                print(color_text("Superuser already exists!", YELLOW))
+                print(color_text(f"Superuser already exists with email {email}!", YELLOW))
 
         self.stdout.write(self.style.SUCCESS("\nProject setup complete!"))
