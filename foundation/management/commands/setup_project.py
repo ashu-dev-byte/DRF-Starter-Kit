@@ -69,7 +69,6 @@ class Command(BaseCommand):
         # subprocess.check_call(["pip", "install", "-r", "requirements.txt"])
 
         print(color_text("All dependencies installed!", TerminalColor.BLUE))
-        print(color_text("Starting project setup:", TerminalColor.BLUE))
         print(color_text(f"Detected {self.system_os}", TerminalColor.BLUE))
 
         self.check_postgresql()
