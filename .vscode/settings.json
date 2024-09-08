@@ -1,5 +1,12 @@
 {
-    "cSpell.words": ["corsheaders", "simplejwt", "Skool"],
+    "cSpell.words": [
+        "corsheaders",
+        "createsuperuser",
+        "makemigrations",
+        "runserver",
+        "simplejwt",
+        "Skool"
+    ],
     "python.defaultInterpreterPath": "../.venv/bin/python",
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",

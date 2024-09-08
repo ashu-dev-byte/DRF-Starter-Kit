@@ -17,12 +17,12 @@ import environ
 import os
 
 
+APP_LABEL = "DRF Starter Kit"
+
+
 root = environ.Path(__file__) - 2  # Set location 2 folders back (/a/b/ - 2 => /)
 DEFAULT_ENV_PATH = root()  # Default location of .env file
 DEFAULT_ENV_FILE = os.path.join(DEFAULT_ENV_PATH, ".env")
-
-
-APP_LABEL = "DRF Starter Kit"
 
 
 env = environ.Env(

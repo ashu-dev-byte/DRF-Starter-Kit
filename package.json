@@ -5,11 +5,12 @@
     "private": true,
     "author": "Ashutosh Anand",
     "scripts": {
-        "setup:project": "echo \"Starting project setup...\" && pip install -r requirements.txt && python manage.py setup_project",
+        "setup:project": "node echoSetupStart.js && pip install -r requirements.txt && python manage.py setup_project",
         "install:deps": "pip install -r requirements.txt",
         "create:superuser": "python manage.py createsuperuser",
         "makemigrations": "python manage.py makemigrations",
         "migrate": "python manage.py migrate",
-        "server": "python manage.py runserver"
+        "server": "python manage.py runserver",
+        "ping": ""
     }
 }
