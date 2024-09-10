@@ -7,4 +7,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = "__all__"
+        fields = ["id", "email", "is_active", "age", "role", "created_at", "updated_at"]
+
+
+class UserWithTokenSerializer(UserSerializer):
+    access_token = serializers.CharField()
+
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ["access_token"]

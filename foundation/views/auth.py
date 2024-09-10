@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.signals import user_logged_in
+from drf_spectacular.utils import extend_schema
 from rest_framework import exceptions, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -7,25 +8,39 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from foundation.helpers import log_error
-from foundation import serializers
+from foundation.serializers.auth import LoginSerializer, RegisterUserSerializer
+from foundation.serializers.shared import ErrRespSerializer, ValidationErrSerializer
+from foundation.serializers.user import UserSerializer, UserWithTokenSerializer
 
 
 class RegisterUserAPIView(APIView):
     permission_classes = (AllowAny,)
 
+    @extend_schema(
+        request=RegisterUserSerializer,
+        responses={
+            201: UserWithTokenSerializer,
+            400: ValidationErrSerializer,
+            409: ErrRespSerializer,
+            500: ErrRespSerializer,
+        },
+    )
     def post(self, request):
-        print(request.data)
         try:
-            serializer = serializers.RegisterUserSerializer(data=request.data)
+            serializer = RegisterUserSerializer(data=request.data)
             if not serializer.is_valid():
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                validation_errors = {field: errors[0] for field, errors in serializer.errors.items()}
+                return Response(
+                    ValidationErrSerializer({"errors": validation_errors}).data,
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             email = serializer.validated_data["email"].lower()
             validated_data = {**serializer.validated_data, "email": email}
 
             if get_user_model().objects.filter(email=email).exists():
                 return Response(
-                    {"message": "A user with that email already exists!"},
+                    ErrRespSerializer({"message": "A user with that email already exists!"}).data,
                     status=status.HTTP_409_CONFLICT,
                 )
 
@@ -34,17 +49,16 @@ class RegisterUserAPIView(APIView):
 
             user_logged_in.send(sender=user.__class__, request=request, user=user)
             return Response(
-                {
-                    "access_token": str(access_token),
-                    "data": serializers.UserSerializer(user).data,
-                },
+                UserWithTokenSerializer({"access_token": str(access_token), "user": user}).data,
                 status=status.HTTP_201_CREATED,
             )
 
         except Exception as ex:
             log_error("ERROR occurred in RegistrationAPIView", ex)
             return Response(
-                {"message": "Some error occurred. Please contact administrator."},
+                ErrRespSerializer(
+                    {"message": "Some error occurred. Please contact administrator."}
+                ).data,
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
@@ -54,7 +68,7 @@ class LoginAPIView(APIView):
 
     def post(self, request):
         try:
-            serializer = serializers.LoginSerializer(data=request.data)
+            serializer = LoginSerializer(data=request.data)
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -73,7 +87,7 @@ class LoginAPIView(APIView):
             return Response(
                 {
                     "access_token": str(access_token),
-                    "data": serializers.UserSerializer(user).data,
+                    "data": UserSerializer(user).data,
                 },
                 status=status.HTTP_200_OK,
             )
@@ -94,7 +108,7 @@ class LoggedInUserAPIView(APIView):
 
     def get(self, request):
         try:
-            data = serializers.UserSerializer(request.user).data
+            data = UserSerializer(request.user).data
             return Response(dict(data=data))
 
         except Exception as e:
